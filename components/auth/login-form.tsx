@@ -69,8 +69,8 @@ export function LoginForm() {
         headerSubtitle="Introduce tu correo y contraseña para acceder"
       >
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="px-4">
-            <div className="space-y-4 mt-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="md:px-4 px-1">
+            <div className="space-y-6 mt-6">
               <FormField
                 name="email"
                 control={form.control}

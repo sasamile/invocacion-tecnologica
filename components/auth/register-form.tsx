@@ -65,7 +65,7 @@ export function RegisterForm() {
         headerSubtitle="Crear acceso para el administrador del sistema"
       >
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="px-4">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="md:px-4 px-1">
             <div className="space-y-4 mt-6">
               <FormField
                 control={form.control}

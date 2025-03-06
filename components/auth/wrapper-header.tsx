@@ -15,7 +15,7 @@ export function WrapperHeader({ title, subtitle }: WrapperHeaderProps) {
       <h3 className="text-2xl leading-none text-center font-medium">
         {title}
       </h3>
-      <p className="text-base text-muted-foreground text-center">{subtitle}</p>
+      <p className="text-[15px] text-muted-foreground text-center">{subtitle}</p>
     </div>
   );
 }
