@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -47,3 +41,59 @@ model Account {
   @@id([provider, providerAccountId])
 }
 
+model Department {
+  codeDepartment String           @id
+  name           String
+  municipalities Municipalities[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Municipalities {
+  id             String         @id @default(uuid())
+  codeMunicipalities String
+  name           String
+  departmentId   String
+  institutions   Institutions[]
+
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  Department Department @relation(fields: [departmentId], references: [codeDepartment])
+
+  @@unique([codeMunicipalities, departmentId])
+}
+
+model Institutions {
+  codeDane         String         @id
+  name             String
+  address          String
+  zona             String
+  phone            String
+  Guy              String
+  calendar         String
+  state            String
+  rector           String
+  municipalitiesId String
+  headquarters     Headquarters[]
+
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  Municipalities Municipalities @relation(fields: [municipalitiesId], references: [id])
+}
+
+model Headquarters {
+  codeDane       String @id
+  name           String
+  address        String
+  zona           String
+  phone          String
+  calendar       String
+  state          String
+  rector         String
+  institutionsId String
+
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  Institutions Institutions @relation(fields: [institutionsId], references: [codeDane])
+}
