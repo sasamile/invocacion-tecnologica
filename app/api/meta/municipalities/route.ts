@@ -34,3 +34,29 @@ export async function GET() {
 }
 
 
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const { codeMunicipalities, name } = body;
+
+    // Validar que se envíen los datos requeridos
+    if (!codeMunicipalities || !name) {
+      return new NextResponse("Faltan datos obligatorios", { status: 400 });
+    }
+
+    // Crear el municipio con el departamento por defecto (Meta)
+    const newMunicipio = await db.municipalities.create({
+      data: {
+        codeMunicipalities,
+        name,
+        departmentId: "50", // Departamento del Meta
+      },
+    });
+
+    return NextResponse.json(newMunicipio, { status: 201 });
+  } catch (error) {
+    console.error("[ERROR_CREAR_MUNICIPIO]", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
+}
