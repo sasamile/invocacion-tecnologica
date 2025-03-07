@@ -1,3 +1,6 @@
+"use client";
+
+import axios from "axios";
 import { Building, School, MapPin } from "lucide-react";
 
 import {
@@ -7,52 +10,68 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { StatsCard } from "./stats-card";
+import { StatsCardSkeleton } from "../skeletons/dashboard/stats-card-skeleton";
+
+interface DataProps {
+  departamentoId: string;
+  totalMunicipios: number;
+  totalInstituciones: number;
+  totalSedes: number;
+}
 
 export default function StatsView() {
+  const [data, setData] = useState<DataProps | null>(null);
+
+  useEffect(() => {
+    const getData = async () => {
+      const res = await axios("http://localhost:3000/api/meta");
+      setData(res.data);
+    };
+    getData();
+  }, []);
+
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
       <p className="text-muted-foreground">
-        Bienvenido al Sistema de Gestión de Instituciones Educativas de Meta.
+        Bienvenido al Sistema de Gestión de Instituciones Educativas del Meta.
       </p>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Municipios</CardTitle>
-            <Building className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">29</div>
-            <p className="text-xs text-muted-foreground">
-              Municipios registrados en el sistema
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Colegios</CardTitle>
-            <School className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">152</div>
-            <p className="text-xs text-muted-foreground">
-              Colegios registrados en el sistema
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Sedes</CardTitle>
-            <MapPin className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">386</div>
-            <p className="text-xs text-muted-foreground">
-              Sedes educativas registradas
-            </p>
-          </CardContent>
-        </Card>
+        {!data && (
+          <>
+            <StatsCardSkeleton />
+            <StatsCardSkeleton />
+            <StatsCardSkeleton />
+          </>
+        )}
+        {data && (
+          <>
+            <StatsCard
+              title="Municipios"
+              description="Municipios registrados en el sistema"
+              value={data.totalMunicipios ?? 0}
+              Icon={Building}
+              backgroundColor="#7c41f5"
+            />
+            <StatsCard
+              title="Colegios"
+              description="Colegios registrados en el sistema"
+              value={data.totalInstituciones ?? 0}
+              Icon={School}
+              backgroundColor="#e95342"
+            />
+            <StatsCard
+              title="Sedes"
+              description="Sedes educativas registradas"
+              value={data.totalSedes ?? 0}
+              Icon={MapPin}
+              backgroundColor="#fab84a"
+            />
+          </>
+        )}
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">

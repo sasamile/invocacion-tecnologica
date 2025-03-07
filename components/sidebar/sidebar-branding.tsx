@@ -7,7 +7,7 @@ export function SidebarBranding() {
         <School className="h-6 w-6 text-primary-foreground" />
       </div>
       <div>
-        <h2 className="font-semibold tracking-tight">SisEduca Meta</h2>
+        <h2 className="font-semibold tracking-tight">EduControl</h2>
         <p className="text-xs text-muted-foreground">Gestión Educativa</p>
       </div>
     </div>
