@@ -13,16 +13,26 @@ export async function GET() {
         },
       },
       include: {
-        Municipalities: true,
+        Municipalities: {
+          select: {
+            name: true
+          }
+        },
         headquarters: true,
       },
     });
 
     const result = instituciones.map((institucion) => ({
-      codeDane: institucion.codeDane,
+      id: institucion.codeDane,
+      code: institucion.codeDane,
       name: institucion.name,
-      municipio: institucion.Municipalities.name,
-      totalSedes: institucion.headquarters.length,
+      address: institucion.address,
+      zona: institucion.zona,
+      municipality: institucion.Municipalities.name,
+      phone: institucion.phone,
+      state: institucion.state,
+      rector: institucion.rector,
+      campuses: institucion.headquarters.length,
     }));
 
     return NextResponse.json(result);

@@ -38,15 +38,41 @@ export async function PATCH(req: Request, { params }: { params: { institutionsId
 }
 
 // Eliminar colegio por codeDane
-export async function DELETE(req: Request, { params }: { params: { institutionsId: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ institutionsId: string }> }) {
   try {
-    const { institutionsId } = params;
-
-    await db.institutions.delete({
-      where: { codeDane:institutionsId },
+    const resolvedParams = await params;
+    const { institutionsId } = resolvedParams;
+    
+    console.log("Eliminando institución:", institutionsId);
+    
+    // Primero eliminamos todas las sedes relacionadas con esta institución
+    const deletedHeadquarters = await db.headquarters.deleteMany({
+      where: { 
+        institutionsId: institutionsId 
+      },
     });
-
-    return new NextResponse("Colegio eliminado correctamente", { status: 200 });
+    
+    console.log(`Eliminadas ${deletedHeadquarters.count} sedes`);
+    
+    // Luego eliminamos la institución
+    const deletedInstitution = await db.institutions.delete({
+      where: { 
+        codeDane: institutionsId 
+      },
+    });
+    
+    console.log("Institución eliminada:", deletedInstitution.codeDane);
+    
+    return new Response(JSON.stringify({ 
+      message: "Colegio eliminado correctamente",
+      deletedHeadquarters: deletedHeadquarters.count,
+      deletedInstitution: deletedInstitution.codeDane
+    }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   } catch (error) {
     console.error("[ERROR_DELETE_COLEGIO]", error);
     return new NextResponse("Internal Server Error", { status: 500 });

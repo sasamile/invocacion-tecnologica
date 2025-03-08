@@ -12,8 +12,6 @@ import {
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
 import { Button } from "../ui/button";
-import { Select } from "../ui/select";
-import { Input } from "../ui/input";
 
 interface CreateSchoolDialogProps {
   isDialogOpen: boolean,
@@ -24,7 +22,7 @@ export function CreateSchoolDialog({ isDialogOpen, setIsDialogOpen }: CreateScho
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button className="max-lg:w-full bg-blue-500 hover:bg-blue-600">
           <Plus className="mr-2 h-4 w-4" />
           Agregar Colegio
         </Button>

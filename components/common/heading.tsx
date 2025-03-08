@@ -8,7 +8,7 @@ interface HeaderProps {
 
 export function Heading({ title, description, className }: HeaderProps) {
   return (
-    <div className={cn(className)}>
+    <div className={cn("w-full", className)}>
       <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
       <p className="text-muted-foreground">{description}</p>
     </div>

@@ -79,7 +79,7 @@ model Institutions {
 
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
-  Municipalities Municipalities @relation(fields: [municipalitiesId], references: [id])
+  Municipalities Municipalities @relation(fields: [municipalitiesId], references: [id], onDelete: Cascade)
 }
 
 model Headquarters {
@@ -95,5 +95,5 @@ model Headquarters {
 
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
-  Institutions Institutions @relation(fields: [institutionsId], references: [codeDane])
+  Institutions Institutions @relation(fields: [institutionsId], references: [codeDane], onDelete: Cascade)
 }
