@@ -1,10 +1,10 @@
+import api from "@/api";
 import { SchoolFormValues } from "@/components/common/school-form";
-import axios from "axios";
 
 export const createInstitute = async (values: SchoolFormValues) => {
   try {
-    const { status } = await axios.post(
-      "http://localhost:3000/api/meta/institutions",
+    const { status } = await api.post(
+      "/api/meta/institutions",
       values
     );
 
@@ -30,8 +30,8 @@ export const updateInstitute = async (values: SchoolFormValues, instituteId: str
       phone: values.phone,
       rector: values.rector
     }
-    const { status } = await axios.patch(
-      `http://localhost:3000/api/meta/institutions/${instituteId}`,
+    const { status } = await api.patch(
+      `/api/meta/institutions/${instituteId}`,
       payload
     );
 

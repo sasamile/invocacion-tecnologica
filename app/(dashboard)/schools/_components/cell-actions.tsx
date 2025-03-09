@@ -9,11 +9,11 @@ import { AlertModal } from "@/components/common/alert-modal";
 import { Modal } from "@/components/common/modal";
 import { cn } from "@/lib/utils";
 import { SchoolColumns } from "@/types";
-import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
 import { SchoolForm } from "@/components/common/school-form";
 import { useMunicipalities } from "@/hooks/use-municipalities";
 import { SchoolDetailsModal } from "@/components/common/school-details-modal";
+import api from "@/api";
 
 interface CellActionProps {
   data: SchoolColumns;
@@ -41,8 +41,8 @@ export function CellAction({ data }: CellActionProps) {
   const handleConfirm = () => {
     startTransition(async () => {
       try {
-        const res = await axios.delete(
-          `http://localhost:3000/api/meta/institutions/${data.code}`
+        const res = await api.delete(
+          `/api/meta/institutions/${data.code}`
         );
 
         if (res.status !== 200) {
@@ -70,8 +70,8 @@ export function CellAction({ data }: CellActionProps) {
   const fetchSchoolDetails = async () => {
     startTransition(async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:3000/api/meta/institutions/${data.code}`
+        const res = await api.get(
+          `/api/meta/institutions/${data.code}`
         );
         setDetailedData(res.data);
         setOpenDetails(true);

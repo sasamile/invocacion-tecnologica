@@ -2,18 +2,18 @@
 
 import { toast } from "sonner";
 import { Edit, Trash2 } from "lucide-react";
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 import { AlertModal } from "@/components/common/alert-modal";
 import { Modal } from "@/components/common/modal";
 import { cn } from "@/lib/utils";
 import { CampusesColumns } from "@/types";
-import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
 import { SchoolForm } from "@/components/common/school-form";
 import { useMunicipalities } from "@/hooks/use-municipalities";
 import { useInstitutions } from "@/hooks/use-institutions";
+import api from "@/api";
 
 interface CellActionProps {
   data: CampusesColumns;
@@ -36,8 +36,8 @@ export function CellAction({ data }: CellActionProps) {
     startTransition(async () => {
       try {
         console.log(data.id)
-        const res = await axios.delete(
-          `http://localhost:3000/api/meta/headquarters/${data.code}`
+        const res = await api.delete(
+          `/api/meta/headquarters/${data.code}`
         );
 
         if (res.status !== 200) {

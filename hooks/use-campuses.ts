@@ -1,10 +1,10 @@
-import { CampusesColumns, SchoolColumns } from "@/types";
+import api from "@/api";
+import { CampusesColumns } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 
 // Función para obtener los municipios
 const getCampuses = async () => {
-  const { data } = await axios.get<CampusesColumns[]>("http://localhost:3000/api/meta/headquarters");
+  const { data } = await api.get<CampusesColumns[]>("/api/meta/headquarters");
   return data;
 };
 

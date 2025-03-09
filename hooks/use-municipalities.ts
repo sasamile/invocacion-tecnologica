@@ -1,10 +1,10 @@
+import api from "@/api";
 import { MunicipalityData } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 
 // Función para obtener los municipios
 const getMunicipalities = async () => {
-  const { data } = await axios.get<MunicipalityData[]>("http://localhost:3000/api/meta/municipalities");
+  const { data } = await api.get<MunicipalityData[]>("/api/meta/municipalities");
   return data;
 };
 

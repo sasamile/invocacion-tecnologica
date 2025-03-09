@@ -1,6 +1,6 @@
-import axios from "axios";
+import api from "@/api";
 
 export async function getMunicipalities() {
-  const { data } = await axios.get("http://localhost:3000/api/meta/municipalities");
+  const { data } = await api.get("/api/meta/municipalities");
   return data;
 }

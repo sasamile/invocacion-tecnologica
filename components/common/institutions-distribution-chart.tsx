@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -18,35 +17,9 @@ import { useMunicipalities } from "@/hooks/use-municipalities";
 // Registrar los componentes necesarios de Chart.js
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-interface MunicipalityData {
-  id: string;
-  codeMunicipalities: string;
-  name: string;
-  totalInstituciones: number;
-  totalSedes: number;
-}
-
 export function InstitutionsDistributionChart() {
-  // const [data, setData] = useState<MunicipalityData[]>([]);
-  // const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { data: data, isLoading } = useMunicipalities();
-
-  // Obtener datos de la API
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get("http://localhost:3000/api/meta/municipalities");
-  //       setData(response.data);
-  //       setLoading(false);
-  //     } catch (err) {
-  //       setError("Error al cargar los datos del gráfico");
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
 
   // Filtrar municipios con totalInstituciones > 0, ordenar y limitar a los 10 principales
   const filteredData = data
