@@ -43,3 +43,38 @@ export async function GET() {
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
+
+
+// Nuevo endpoint POST para crear un municipio
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+
+    // Validación básica de los datos recibidos
+    const { codeMunicipalities, name } = body;
+
+    if (!codeMunicipalities || !name) {
+      return new NextResponse(
+        JSON.stringify({ error: "codeMunicipalities y name son requeridos" }),
+        { status: 400 }
+      );
+    }
+
+    // Crear el nuevo municipio
+    const newMunicipality = await db.municipalities.create({
+      data: {
+        codeMunicipalities,
+        name,
+        departmentId: "50", // Asumimos que todos pertenecen al departamento 50
+      },
+    });
+
+    return NextResponse.json(newMunicipality, { status: 201 });
+  } catch (e) {
+    console.log("[MUNICIPALITIES_POST]", e);
+    return new NextResponse(
+      JSON.stringify({ error: "Error creando el municipio" }),
+      { status: 500 }
+    );
+  }
+}

@@ -44,3 +44,5 @@ export interface DataProps {
 //   rector: string;
 //   state: string;
 // }
+
+
