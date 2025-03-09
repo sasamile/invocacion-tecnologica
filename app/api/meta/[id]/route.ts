@@ -4,10 +4,11 @@ import { NextResponse } from "next/server";
 // Obtener sede por codeDane
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
     const municipalities = await db.municipalities.findUnique({
       where: { id: id },
     });

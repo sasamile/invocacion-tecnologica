@@ -3,9 +3,10 @@ import { NextResponse } from "next/server";
 
 
 // Actualizar municipio por ID
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
     const { codeMunicipalities, name } = await req.json();
 
     // Verificar si el municipio existe
@@ -34,9 +35,10 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 }
 
 // Eliminar municipio por ID
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request,  { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
 
     // Verificar si el municipio existe
     const municipio = await db.municipalities.findUnique({

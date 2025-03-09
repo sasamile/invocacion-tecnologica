@@ -2,9 +2,10 @@ import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
 // Obtener colegio por codeDane
-export async function GET(req: Request, { params }: { params: { institutionsId: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ institutionsId: string }> }) {
   try {
-    const { institutionsId } = params;
+    const resolvedParams = await params;
+    const { institutionsId } = resolvedParams;
     const colegio = await db.institutions.findUnique({
       where: { codeDane: institutionsId },
       include: { Municipalities: true, headquarters: true },
