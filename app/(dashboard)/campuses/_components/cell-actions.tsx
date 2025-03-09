@@ -8,20 +8,22 @@ import { Button } from "@/components/ui/button";
 import { AlertModal } from "@/components/common/alert-modal";
 import { Modal } from "@/components/common/modal";
 import { cn } from "@/lib/utils";
-import { SchoolColumns } from "@/types";
+import { CampusesColumns } from "@/types";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
 import { SchoolForm } from "@/components/common/school-form";
 import { useMunicipalities } from "@/hooks/use-municipalities";
+import { useInstitutions } from "@/hooks/use-institutions";
 
 interface CellActionProps {
-  data: SchoolColumns;
+  data: CampusesColumns;
 }
 
 export function CellAction({ data }: CellActionProps) {
   const queryClient = useQueryClient();
   const [isLoading, startTransition] = useTransition();
   const { data: municipalities } = useMunicipalities();
+  const { data: institutions } = useInstitutions();
 
   const [open, setOpen] = useState(false);
   const [openAlertConfirmation, setOpenAlertConfirmation] = useState(false);
@@ -33,13 +35,14 @@ export function CellAction({ data }: CellActionProps) {
   const handleConfirm = () => {
     startTransition(async () => {
       try {
+        console.log(data.id)
         const res = await axios.delete(
-          `http://localhost:3000/api/meta/institutions/${data.code}`
+          `http://localhost:3000/api/meta/headquarters/${data.code}`
         );
 
         if (res.status !== 200) {
           toast.error("Algo salió mal.", {
-            description: "Ocurrió un error al eliminar el colegio.",
+            description: "Ocurrió un error al eliminar la sede.",
           });
         }
 
@@ -61,8 +64,8 @@ export function CellAction({ data }: CellActionProps) {
   return (
     <>
       <AlertModal
-        title="¿Está seguro de eliminar este colegio?"
-        description="Esta acción no se puede deshacer. Esto eliminará permanentemente el colegio de la plataforma."
+        title="¿Está seguro de eliminar esta sede?"
+        description="Esta acción no se puede deshacer. Esto eliminará permanentemente la sede de la plataforma."
         isLoading={isLoading}
         isOpen={openAlertConfirmation}
         onClose={() => setOpenAlertConfirmation(false)}
@@ -76,11 +79,12 @@ export function CellAction({ data }: CellActionProps) {
         className="max-h-[500px] h-full"
       >
         <SchoolForm
-          type="school"
+          type="campus"
           initialData={data}
           onCancel={closeDialog}
           isEditing
           municipalities={municipalities!}
+          institutions={institutions}
         />
       </Modal>
 

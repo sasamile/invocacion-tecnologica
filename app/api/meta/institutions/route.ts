@@ -33,7 +33,8 @@ export async function GET() {
       state: institucion.state,
       rector: institucion.rector,
       campuses: institucion.headquarters.length,
-      municipalityId: institucion.municipalitiesId
+      municipalityId: institucion.municipalitiesId,
+      instituteCode: institucion.codeDane
     }));
 
     return NextResponse.json(result);

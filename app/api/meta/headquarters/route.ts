@@ -24,13 +24,18 @@ export async function GET() {
     });
 
     const result = sedes.map((sede) => ({
-      codeDane: sede.codeDane,
+      id: sede.codeDane,
+      code: sede.codeDane,
       name: sede.name,
-      institucion: sede.Institutions.name,
-      municipio: sede.Institutions.Municipalities.name,
+      address: sede.address,
       zona: sede.zona,
-      rector: sede.rector,
+      municipality: sede.Institutions.Municipalities.name,
+      phone: sede.phone,
       state: sede.state,
+      rector: sede.rector,
+      municipalityId: sede.Institutions.municipalitiesId,
+      instituteName: sede.Institutions.name,
+      instituteCode: sede.Institutions.codeDane
     }));
 
     return NextResponse.json(result);
@@ -44,35 +49,32 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const {
-      codeDane,
+      code,
       name,
       address,
       zona,
       phone,
-      calendar,
       state,
       rector,
-      institutionsId,
+      instituteCode,
     } = body;
 
     // Validar que se envíen los datos requeridos
     if (
-      !codeDane ||
       !name ||
       !address ||
       !zona ||
       !phone ||
-      !calendar ||
       !state ||
       !rector ||
-      !institutionsId
+      !instituteCode
     ) {
       return new NextResponse("Faltan datos obligatorios", { status: 400 });
     }
 
     // Verificar si la institución existe y pertenece al departamento del Meta
     const institucion = await db.institutions.findUnique({
-      where: { codeDane: institutionsId },
+      where: { codeDane: instituteCode },
       include: {
         Municipalities: {
           include: {
@@ -95,15 +97,14 @@ export async function POST(req: Request) {
     // Crear la sede en la base de datos
     const newSede = await db.headquarters.create({
       data: {
-        codeDane,
+        codeDane: code,
         name,
         address,
         zona,
         phone,
-        calendar,
         state,
         rector,
-        institutionsId,
+        institutionsId: instituteCode,
       },
     });
 

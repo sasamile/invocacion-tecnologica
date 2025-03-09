@@ -10,14 +10,16 @@ import {
 } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 import { Button } from "../ui/button";
-import { MunicipalityData } from "@/types";
+import { MunicipalityData, SchoolColumns } from "@/types";
 import { SchoolForm } from "../common/school-form";
 
 interface CreateSchoolDialogProps {
   label: string;
   title: string;
   description?: string;
+  type: "school" | "campus";
   municipalities?: MunicipalityData[];
+  institutions?: SchoolColumns[];
   isDialogOpen: boolean;
   setIsDialogOpen: (open: boolean) => void;
 }
@@ -28,6 +30,8 @@ export function CreateSchoolDialog({
   description,
   isDialogOpen,
   municipalities,
+  type,
+  institutions,
   setIsDialogOpen,
 }: CreateSchoolDialogProps) {
   return (
@@ -44,8 +48,9 @@ export function CreateSchoolDialog({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <SchoolForm
-          type="school"
+          type={type}
           municipalities={municipalities!}
+          institutions={institutions}
           onCancel={() => setIsDialogOpen(false)}
         />
       </DialogContent>

@@ -1,6 +1,6 @@
 "use client";
 
-import { BaseInstitution, MunicipalityData } from "@/types";
+import { BaseInstitution, CampusesColumns, MunicipalityData, SchoolColumns } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -26,13 +26,15 @@ import { toast } from "sonner";
 import { createInstitute, updateInstitute } from "@/services/institutions";
 import { useQueryClient } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
+import { createCampus, updateCampus } from "@/services/campuses";
 
 interface SchoolFormProps {
   initialData?: BaseInstitution;
   isEditing?: boolean;
   onCancel: () => void;
   municipalities: MunicipalityData[];
-  type: "school" | "campus"; // Para identificar qué formulario se usa
+  institutions?: SchoolColumns[];
+  type: "school" | "campus";
 }
 
 const baseInstitutionSchema = z.object({
@@ -41,7 +43,7 @@ const baseInstitutionSchema = z.object({
   address: z.string().min(5, "La dirección debe tener al menos 5 caracteres"),
   zona: z.enum(["URBANA", "RURAL", "URBANA, RURAL"]),
   municipalitiesId: z.string(),
-  instituteName: z.string().optional(),
+  instituteCode: z.string().optional(),
   phone: z.string().min(7, "El teléfono debe tener al menos 7 caracteres"),
   state: z.enum(["ANTIGUO-ACTIVO", "NUEVO-ACTIVO", "CERRADO"]),
   rector: z
@@ -56,12 +58,14 @@ export function SchoolForm({
   type,
   isEditing,
   municipalities,
+  institutions,
   onCancel,
 }: SchoolFormProps) {
   const queryClient = useQueryClient();
 
   const [isLoading, startTransition] = useTransition();
   const [selectedMunicipio, setSelectedMunicipio] = useState<string>(initialData?.municipalityId ?? "");
+  const [selectedInstitute, setSelectedInstitute] = useState<string>(initialData?.instituteCode ?? "");
   const [codeEditable, setCodeEditable] = useState<boolean>(!isEditing);
 
   // Configurar el formulario con React Hook Form y Zod
@@ -76,6 +80,7 @@ export function SchoolForm({
       phone: initialData?.phone ?? "",
       state: (initialData?.state as  "ANTIGUO-ACTIVO" | "NUEVO-ACTIVO" | "CERRADO") ?? "NUEVO-ACTIVO",
       rector: initialData?.rector ?? "",
+      instituteCode: initialData?.instituteCode ?? ""
     },
   });
 
@@ -101,7 +106,7 @@ export function SchoolForm({
 
           if (!success) {
             toast.error("Algo salió mal.", {
-              description: "Ocurrió un error al eliminar el colegio.",
+              description: "Ocurrió un error al crear el colegio.",
             });
           }
           
@@ -113,10 +118,27 @@ export function SchoolForm({
             form.reset();
             queryClient.invalidateQueries({ queryKey: ["institutions"] });
           }
+        } else {
+          const { success } = await createCampus(values);
+
+          if (!success) {
+            toast.error("Algo salió mal.", {
+              description: "Ocurrió un error al crear la sede.",
+            });
+          }
+          
+          if (success) {
+            toast.success("Proceso completado.", {
+              description: "Sede creada exitosamente.",
+            });
+            onCancel();
+            form.reset();
+            ["institutions", "stats", "campuses"].forEach((key) => queryClient.invalidateQueries({ queryKey: [key] }));
+          }
         }
       } catch (error) {
         toast.error("Error", {
-          description: "Algo salió mal al eliminar al usuario.",
+          description: "Algo salió mal en el proceso.",
         });
       }
     });
@@ -130,7 +152,7 @@ export function SchoolForm({
 
           if (!success) {
             toast.error("Algo salió mal.", {
-              description: "Ocurrió un error al eliminar el colegio.",
+              description: "Ocurrió un error al actualizar el colegio.",
             });
           }
           
@@ -141,10 +163,26 @@ export function SchoolForm({
             onCancel();
             queryClient.invalidateQueries({ queryKey: ["institutions"] });
           }
+        } else {
+          const { success } = await updateCampus(values, initialData?.id!);
+
+          if (!success) {
+            toast.error("Algo salió mal.", {
+              description: "Ocurrió un error al actualizar la sede.",
+            });
+          }
+          
+          if (success) {
+            toast.success("Proceso completado.", {
+              description: "Sede actualizada exitosamente.",
+            });
+            onCancel();
+            ["institutions", "stats", "campuses"].forEach((key) => queryClient.invalidateQueries({ queryKey: [key] }));
+          }
         }
       } catch (error) {
         toast.error("Error", {
-          description: "Algo salió mal al eliminar al usuario.",
+          description: "Algo salió mal en el proceso.",
         });
       }
     });
@@ -154,6 +192,45 @@ export function SchoolForm({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid gap-4 md:grid-cols-2">
+          {/* Colegio */}
+          {type === "campus" && institutions && <FormField
+            control={form.control}
+            name="instituteCode"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Colegio</FormLabel>
+                <Select
+                  disabled={isLoading}
+                  onValueChange={(value) => {
+                    const institution = institutions.find(
+                      (ins) => ins.instituteCode === value
+                    );
+
+                    if (institution) {
+                      field.onChange(institution.instituteCode);
+                      setSelectedInstitute(value);
+                    }
+                  }}
+                  value={selectedInstitute}
+                >
+                  <FormControl>
+                    <SelectTrigger className="w-full truncate">
+                      <SelectValue placeholder="Seleccione un colegio" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {institutions.map((institute, i) => (
+                      <SelectItem key={i} value={institute.instituteCode}>
+                        {institute.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />}
+          
           {/* Municipio */}
           <FormField
             control={form.control}

@@ -10,7 +10,6 @@ interface SchoolsTableProps<TData> {
 export function SchoolsTable<TData>({ data, columns }: SchoolsTableProps<TData>) {
   return (
     <DataTable
-      searchKey="code"
       columns={columns}
       data={data}
     />

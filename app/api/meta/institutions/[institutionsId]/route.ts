@@ -44,8 +44,6 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ insti
     const resolvedParams = await params;
     const { institutionsId } = resolvedParams;
     
-    console.log("Eliminando institución:", institutionsId);
-    
     // Primero eliminamos todas las sedes relacionadas con esta institución
     const deletedHeadquarters = await db.headquarters.deleteMany({
       where: { 
@@ -53,16 +51,12 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ insti
       },
     });
     
-    console.log(`Eliminadas ${deletedHeadquarters.count} sedes`);
-    
     // Luego eliminamos la institución
     const deletedInstitution = await db.institutions.delete({
       where: { 
         codeDane: institutionsId 
       },
     });
-    
-    console.log("Institución eliminada:", deletedInstitution.codeDane);
     
     return new Response(JSON.stringify({ 
       message: "Colegio eliminado correctamente",

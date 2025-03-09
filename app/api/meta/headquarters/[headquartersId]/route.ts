@@ -25,10 +25,11 @@ export async function GET(
 // Editar sede por codeDane
 export async function PUT(
   req: Request,
-  { params }: { params: { headquartersId: string } }
+  { params }: { params: Promise<{ headquartersId: string }> }
 ) {
   try {
-    const { headquartersId } = params;
+    const resolvedParams = await params;
+    const { headquartersId } = resolvedParams;
     const data = await req.json();
 
     const updatedSede = await db.headquarters.update({
@@ -45,17 +46,25 @@ export async function PUT(
 
 // Eliminar sede por codeDane
 export async function DELETE(
-  req: Request,
-  { params }: { params: { headquartersId: string } }
+  req: Request, { params }: { params: Promise<{ headquartersId: string }> }
 ) {
   try {
-    const { headquartersId } = params;
+    const resolvedParams = await params;
+    const { headquartersId } = resolvedParams;
+
+    console.log("Codgigo:", headquartersId)
+
+    if (!headquartersId) {
+      return new NextResponse("ID no proporcionado", { status: 400 });
+    }
+
+    console.log("CODIGO:", headquartersId);
 
     await db.headquarters.delete({
       where: { codeDane: headquartersId },
     });
 
-    return new NextResponse("Sede eliminada correctamente", { status: 200 });
+    return new NextResponse("Sede eliminada correctamente.", { status: 200 });
   } catch (error) {
     console.error("[ERROR_DELETE_SEDE]", error);
     return new NextResponse("Internal Server Error", { status: 500 });

@@ -43,6 +43,7 @@ export default function SchoolsPage() {
           description="Gestione los colegios del Departamento del Meta"
         />
         <CreateSchoolDialog
+          type="school"
           label="Agregar colegio"
           title="Agregar Nuevo Colegio"
           description="Ingrese los datos del nuevo colegio. El código del departamento y

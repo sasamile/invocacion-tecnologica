@@ -8,7 +8,8 @@ export interface BaseInstitution {
   phone: string;
   state: string;
   rector: string;
-  municipalityId: string
+  municipalityId: string;
+  instituteCode: string;
 }
 
 export interface SchoolColumns extends BaseInstitution {
@@ -16,7 +17,7 @@ export interface SchoolColumns extends BaseInstitution {
 }
 
 export interface CampusesColumns extends BaseInstitution {
-  instituteName: string
+  instituteName: string;
 }
 
 export interface MunicipalityData {
@@ -33,3 +34,13 @@ export interface DataProps {
   totalInstituciones: number;
   totalSedes: number;
 }
+
+// export interface CampusColumns {
+//   codeDane: string;
+//   name: string;
+//   institucion: string;
+//   municipio: string;
+//   zona: string;
+//   rector: string;
+//   state: string;
+// }
