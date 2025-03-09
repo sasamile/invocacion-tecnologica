@@ -1,6 +1,5 @@
 "use client";
 
-import axios from "axios";
 import { Building, School, MapPin } from "lucide-react";
 
 import {
@@ -10,27 +9,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useEffect, useState } from "react";
 import { StatsCard } from "./stats-card";
 import { StatsCardSkeleton } from "../skeletons/dashboard/stats-card-skeleton";
-
-interface DataProps {
-  departamentoId: string;
-  totalMunicipios: number;
-  totalInstituciones: number;
-  totalSedes: number;
-}
+import { useStats } from "@/hooks/use-stats";
 
 export default function StatsView() {
-  const [data, setData] = useState<DataProps | null>(null);
-
-  useEffect(() => {
-    const getData = async () => {
-      const res = await axios("http://localhost:3000/api/meta");
-      setData(res.data);
-    };
-    getData();
-  }, []);
+  const { data } = useStats()
 
   return (
     <div className="space-y-6">

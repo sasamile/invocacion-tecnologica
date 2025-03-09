@@ -33,6 +33,7 @@ export async function GET() {
       state: institucion.state,
       rector: institucion.rector,
       campuses: institucion.headquarters.length,
+      municipalityId: institucion.municipalitiesId
     }));
 
     return NextResponse.json(result);
@@ -46,27 +47,22 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const {
-      codeDane,
+      code,
       name,
       address,
       zona,
       phone,
-      Guy,
-      calendar,
       state,
       rector,
       municipalitiesId,
     } = body;
 
-
     if (
-      !codeDane ||
+      !code ||
       !name ||
       !address ||
       !zona ||
       !phone ||
-      !Guy ||
-      !calendar ||
       !state ||
       !rector ||
       !municipalitiesId
@@ -88,13 +84,11 @@ export async function POST(req: Request) {
 
     const newInstitution = await db.institutions.create({
       data: {
-        codeDane,
+        codeDane: code,
         name,
         address,
         zona,
         phone,
-        Guy,
-        calendar,
         state,
         rector,
         municipalitiesId,

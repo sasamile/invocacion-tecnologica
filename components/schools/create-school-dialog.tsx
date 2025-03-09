@@ -4,102 +4,50 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
 import { Button } from "../ui/button";
+import { MunicipalityData } from "@/types";
+import { SchoolForm } from "../common/school-form";
 
 interface CreateSchoolDialogProps {
-  isDialogOpen: boolean,
-  setIsDialogOpen: (open: boolean) => void
+  label: string;
+  title: string;
+  description?: string;
+  municipalities?: MunicipalityData[];
+  isDialogOpen: boolean;
+  setIsDialogOpen: (open: boolean) => void;
 }
 
-export function CreateSchoolDialog({ isDialogOpen, setIsDialogOpen }: CreateSchoolDialogProps) {
+export function CreateSchoolDialog({
+  label,
+  title,
+  description,
+  isDialogOpen,
+  municipalities,
+  setIsDialogOpen,
+}: CreateSchoolDialogProps) {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button className="max-lg:w-full bg-blue-500 hover:bg-blue-600">
-          <Plus className="mr-2 h-4 w-4" />
-          Agregar Colegio
+          <Plus className="mr-2 size-4" />
+          {label}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[525px] max-md:h-[90%] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Agregar Nuevo Colegio</DialogTitle>
-          <DialogDescription>
-            Ingrese los datos del nuevo colegio. El código del departamento y
-            municipio se generarán automáticamente.
-          </DialogDescription>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
-            <Label htmlFor="municipio">Municipio</Label>
-            {/* <Select
-              onValueChange={(value) => {
-                const municipio = municipios.find((m) => m.codigo === value);
-                setNewColegio({
-                  ...newColegio,
-                  municipio: municipio ? municipio.nombre : "",
-                });
-              }}
-            >
-              <SelectTrigger id="municipio">
-                <SelectValue placeholder="Seleccione un municipio" />
-              </SelectTrigger>
-              <SelectContent>
-                {municipios.map((municipio) => (
-                  <SelectItem key={municipio.codigo} value={municipio.codigo}>
-                    {municipio.nombre}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select> */}
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="codigo">Código del Colegio</Label>
-            {/* <div className="flex">
-              <div className="flex h-10 w-[90px] items-center justify-center rounded-l-md border border-r-0 bg-muted text-sm">
-                {getCodigoPrefix() || "Código"}
-              </div>
-              <Input
-                id="codigo"
-                className="rounded-l-none"
-                placeholder="Código (3 dígitos)"
-                value={newColegio.codigo}
-                onChange={(e) =>
-                  setNewColegio({ ...newColegio, codigo: e.target.value })
-                }
-                maxLength={3}
-                disabled={!newColegio.municipio}
-              />
-            </div> */}
-            {/* <p className="text-xs text-muted-foreground">
-              Código final: {getCodigoPrefix()}
-              {newColegio.codigo || "XXX"}
-            </p> */}
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="nombre">Nombre del Colegio</Label>
-            {/* <Input
-              id="nombre"
-              placeholder="Nombre"
-              value={newColegio.nombre}
-              onChange={(e) =>
-                setNewColegio({ ...newColegio, nombre: e.target.value })
-              }
-            /> */}
-          </div>
-        </div>
-        <DialogFooter>
-          {/* <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-            Cancelar
-          </Button> */}
-          {/* <Button onClick={handleAddColegio}>Guardar</Button> */}
-        </DialogFooter>
+        <SchoolForm
+          type="school"
+          municipalities={municipalities!}
+          onCancel={() => setIsDialogOpen(false)}
+        />
       </DialogContent>
     </Dialog>
   );

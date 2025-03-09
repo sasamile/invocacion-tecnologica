@@ -20,9 +20,10 @@ export async function GET(req: Request, { params }: { params: { institutionsId: 
 }
 
 // Editar colegio por codeDane
-export async function PATCH(req: Request, { params }: { params: { institutionsId: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ institutionsId: string }> }) {
   try {
-    const { institutionsId } = params;
+    const resolvedParams = await params;
+    const { institutionsId } = resolvedParams;
     const data = await req.json();
 
     const updatedColegio = await db.institutions.update({

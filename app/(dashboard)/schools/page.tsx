@@ -10,42 +10,25 @@ import {
 import { Heading } from "@/components/common/heading";
 import { CreateSchoolDialog } from "@/components/schools/create-school-dialog";
 import { SchoolsTable } from "@/components/common/shools-table";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { SchoolColumns } from "@/types";
+import { useState } from "react";
 import { schoolColumns } from "./_components/columns";
 import { TableSkeleton } from "@/components/skeletons/table/table-skeleton";
 import { schoolsSkeletonColumns } from "@/constants";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-
-interface MunicipalityData {
-  id: string;
-  codeMunicipalities: string;
-  name: string;
-  totalInstituciones: number;
-  totalSedes: number;
-}
+import { useMunicipalities } from "@/hooks/use-municipalities";
+import { useInstitutions } from "@/hooks/use-institutions";
 
 export default function SchoolsPage() {
-  const [dataTable, setDataTable] = useState<SchoolColumns[]>([]);
-  const [municipalities, setMunicipalities] = useState<MunicipalityData[]>([])
+  const { data: municipalities } = useMunicipalities();
+  const { data: dataTable } = useInstitutions();
 
-  useEffect(() => {
-    const getSchoolsAndMunicipalities = async () => {
-      const tableDataRes = await axios("http://localhost:3000/api/meta/institutions");
-      const municipalityDataRes = await axios("http://localhost:3000/api/meta/municipalities");
-      setDataTable(tableDataRes.data);
-      setMunicipalities(municipalityDataRes.data)
-    };
-    getSchoolsAndMunicipalities();
-  }, []);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedMunicipio, setSelectedMunicipio] = useState("all"); // Updated initial state
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedMunicipio, setSelectedMunicipio] = useState("all");
 
   // Filtrar colegios por término de búsqueda y municipio seleccionado
-  const filteredColegios = dataTable.filter(
+  const filteredColegios = dataTable?.filter(
     (school) =>
       (school.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         school.code.includes(searchTerm)) &&
@@ -60,6 +43,11 @@ export default function SchoolsPage() {
           description="Gestione los colegios del Departamento del Meta"
         />
         <CreateSchoolDialog
+          label="Agregar colegio"
+          title="Agregar Nuevo Colegio"
+          description="Ingrese los datos del nuevo colegio. El código del departamento y
+            municipio se generarán automáticamente."
+          municipalities={municipalities}
           isDialogOpen={isDialogOpen}
           setIsDialogOpen={setIsDialogOpen}
         />
@@ -77,13 +65,17 @@ export default function SchoolsPage() {
           />
         </div>
         <div className="w-full sm:w-[200px]">
-          <Select value={selectedMunicipio} onValueChange={setSelectedMunicipio}>
+          <Select
+            value={selectedMunicipio}
+            onValueChange={setSelectedMunicipio}
+          >
             <SelectTrigger className="bg-white">
               <SelectValue placeholder="Todos los municipios" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Todos los municipios</SelectItem> {/* Updated SelectItem value */}
-              {municipalities.map((municipality) => (
+              <SelectItem value="all">Todos los municipios</SelectItem>{" "}
+              {/* Updated SelectItem value */}
+              {municipalities?.map((municipality) => (
                 <SelectItem key={municipality.id} value={municipality.name}>
                   {municipality.name}
                 </SelectItem>
@@ -93,11 +85,16 @@ export default function SchoolsPage() {
         </div>
       </div>
 
-      {dataTable.length === 0 && <TableSkeleton inputPlaceholder="Buscar por código..." columns={schoolsSkeletonColumns} rowCount={10} />}
-      {dataTable.length > 0 && (
+      {!dataTable ? (
+        <TableSkeleton
+          inputPlaceholder="Buscar por código..."
+          columns={schoolsSkeletonColumns}
+          rowCount={10}
+        />
+      ) : (
         <SchoolsTable
           type="institute"
-          data={filteredColegios}
+          data={filteredColegios!}
           columns={schoolColumns}
         />
       )}

@@ -9,6 +9,15 @@ export const schoolColumns: ColumnDef<SchoolColumns>[] = [
   {
     accessorKey: "code",
     header: "Código",
+    cell: ({ row }) => {
+      const code: string = row.getValue("code");
+
+      return (
+        <div className="">
+          <p className="font-medium">{code}</p>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "name",

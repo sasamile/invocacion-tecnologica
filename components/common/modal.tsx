@@ -34,15 +34,18 @@ export function Modal({
   };
   return (
     <Dialog open={isOpen} onOpenChange={onChange}>
-      <DialogContent className={cn("p-0 py-6", className)}>
-        <ScrollArea>
-          <DialogHeader className="px-6">
-            <DialogTitle>{title}</DialogTitle>
-            <DialogDescription>{descripion}</DialogDescription>
-          </DialogHeader>
+      <DialogContent
+        className={cn(
+          "p-0 py-6 max-md:h-[90%] h-fit overflow-y-auto",
+          className
+        )}
+      >
+        <DialogHeader className="px-6">
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{descripion}</DialogDescription>
+        </DialogHeader>
 
-          <div className="px-6 pt-4">{children}</div>
-        </ScrollArea>
+        <div className="px-6 pt-4">{children}</div>
       </DialogContent>
     </Dialog>
   );

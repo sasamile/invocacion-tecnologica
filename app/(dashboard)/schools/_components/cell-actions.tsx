@@ -10,13 +10,18 @@ import { Modal } from "@/components/common/modal";
 import { cn } from "@/lib/utils";
 import { SchoolColumns } from "@/types";
 import axios from "axios";
+import { useQueryClient } from "@tanstack/react-query";
+import { SchoolForm } from "@/components/common/school-form";
+import { useMunicipalities } from "@/hooks/use-municipalities";
 
 interface CellActionProps {
   data: SchoolColumns;
 }
 
 export function CellAction({ data }: CellActionProps) {
+  const queryClient = useQueryClient();
   const [isLoading, startTransition] = useTransition();
+  const { data: municipalities } = useMunicipalities();
 
   const [open, setOpen] = useState(false);
   const [openAlertConfirmation, setOpenAlertConfirmation] = useState(false);
@@ -28,9 +33,9 @@ export function CellAction({ data }: CellActionProps) {
   const handleConfirm = () => {
     startTransition(async () => {
       try {
-        const res = await axios.delete(`http://localhost:3000/api/meta/institutions/${data.code}`);
-
-        console.log(res)
+        const res = await axios.delete(
+          `http://localhost:3000/api/meta/institutions/${data.code}`
+        );
 
         if (res.status !== 200) {
           toast.error("Algo salió mal.", {
@@ -43,6 +48,8 @@ export function CellAction({ data }: CellActionProps) {
             description: res.data.message,
           });
           setOpenAlertConfirmation(false);
+          queryClient.invalidateQueries({ queryKey: ["institutions"] });
+          queryClient.invalidateQueries({ queryKey: ["stats"] });
         }
       } catch {
         toast.error("Error", {
@@ -69,12 +76,13 @@ export function CellAction({ data }: CellActionProps) {
         onClose={closeDialog}
         className="max-h-[500px] h-full"
       >
-        {/* <MonthlyClientForm
+        <SchoolForm
+          type="school"
           initialData={data}
-          vehicleTypes={vehicleTypes}
-          clientTypes={clientTypes}
-          closeDialog={closeDialog}
-        /> */}
+          onCancel={closeDialog}
+          isEditing
+          municipalities={municipalities!}
+        />
       </Modal>
 
       <div className="flex items-center gap-1 w-full justify-end">
@@ -84,9 +92,7 @@ export function CellAction({ data }: CellActionProps) {
         <Button
           variant="ghost"
           size="icon"
-          className={cn(
-            "group size-8 hover:bg-red-500",
-          )}
+          className={cn("group size-8 hover:bg-red-500")}
           onClick={() => setOpenAlertConfirmation(true)}
         >
           <Trash2

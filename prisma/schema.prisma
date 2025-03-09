@@ -70,8 +70,8 @@ model Institutions {
   address          String
   zona             String
   phone            String
-  Guy              String
-  calendar         String
+  Guy              String?
+  calendar         String?
   state            String
   rector           String
   municipalitiesId String
@@ -88,7 +88,7 @@ model Headquarters {
   address        String
   zona           String
   phone          String
-  calendar       String
+  calendar       String?
   state          String
   rector         String
   institutionsId String
