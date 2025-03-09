@@ -54,7 +54,7 @@ export function RegisterForm() {
         form.reset();
       }
     } catch {
-      toast.error("Algo salió mal!");
+      // toast.error("Algo salió mal!");
     }
   };
 

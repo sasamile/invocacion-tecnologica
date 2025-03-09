@@ -58,7 +58,7 @@ export function LoginForm() {
         form.reset();
       }
     } catch {
-      toast.error("Ocurrió un problema con tu solicitud.");
+      // toast.error("Ocurrió un problema con tu solicitud.");
     }
   }
 
