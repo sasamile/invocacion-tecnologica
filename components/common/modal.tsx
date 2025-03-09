@@ -36,7 +36,7 @@ export function Modal({
     <Dialog open={isOpen} onOpenChange={onChange}>
       <DialogContent
         className={cn(
-          "p-0 py-6 max-md:h-[90%] md:max-w-[90%] w-[85%] h-fit max-h-[90vh] overflow-y-auto",
+          "p-0 py-6 max-md:h-[90%] overflow-y-auto",
           className
         )}
       >

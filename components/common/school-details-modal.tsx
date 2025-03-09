@@ -51,7 +51,7 @@ export function SchoolDetailsModal({
       title={`Detalles de ${data.name}`}
       isOpen={isOpen}
       onClose={onClose}
-      className="max-h-[90vh] w-[70%] mx-auto p-6" // Ajustado al 70% del ancho y centrado
+      className="md:max-w-[90%] w-[85%] h-fit max-h-[90vh] mx-auto p-6" // Ajustado al 70% del ancho y centrado
     >
       {isOpen && (
         <div className="space-y-8">
