@@ -8,12 +8,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
-import { ScrollArea } from "../ui/scroll-area";
 
 interface ModalProps {
   title: string;
   descripion?: string;
-  isOpen: boolean;
+  isOpen: boolean; 
   onClose: () => void;
   children?: React.ReactNode;
   className?: string;
@@ -32,11 +31,12 @@ export function Modal({
       onClose();
     }
   };
+
   return (
     <Dialog open={isOpen} onOpenChange={onChange}>
       <DialogContent
         className={cn(
-          "p-0 py-6 max-md:h-[90%] h-fit overflow-y-auto",
+          "p-0 py-6 max-md:h-[90%] md:max-w-[90%] w-[85%] h-fit max-h-[90vh] overflow-y-auto",
           className
         )}
       >
@@ -44,7 +44,7 @@ export function Modal({
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{descripion}</DialogDescription>
         </DialogHeader>
-
+        
         <div className="px-6 pt-4">{children}</div>
       </DialogContent>
     </Dialog>

@@ -51,16 +51,16 @@ export function SchoolDetailsModal({
       title={`Detalles de ${data.name}`}
       isOpen={isOpen}
       onClose={onClose}
-      className="max-h-[90vh] w-full max-w-[1600px] overflow-y-auto p-10" // Aumentamos el ancho a 1600px
+      className="max-h-[90vh] w-[70%] mx-auto p-6" // Ajustado al 70% del ancho y centrado
     >
       {isOpen && (
-        <div className="space-y-12">
+        <div className="space-y-8">
           {/* Información del colegio */}
           <section>
-            <h2 className="text-3xl font-bold text-gray-800 mb-6 border-b pb-2">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">
               Información del Colegio
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 bg-gray-50 p-8 rounded-xl shadow-md">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 bg-gray-50 p-6 rounded-xl shadow-md">
               <div className="flex flex-col">
                 <h3 className="text-sm font-semibold text-gray-600 mb-1">
                   Código DANE
@@ -148,55 +148,57 @@ export function SchoolDetailsModal({
           {/* Lista de sedes */}
           {data.headquarters && data.headquarters.length > 0 && (
             <section>
-              <h2 className="text-3xl font-bold text-gray-800 mb-6 border-b pb-2">
+              <h2 className="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">
                 Sedes ({data.headquarters.length})
               </h2>
-              <div className="rounded-xl shadow-md border overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-gray-100">
-                      <TableHead className="font-semibold text-gray-700 py-3 px-6">
-                        Código DANE
-                      </TableHead>
-                      <TableHead className="font-semibold text-gray-700 py-3 px-6">
-                        Nombre
-                      </TableHead>
-                      <TableHead className="font-semibold text-gray-700 py-3 px-6">
-                        Dirección
-                      </TableHead>
-                      <TableHead className="font-semibold text-gray-700 py-3 px-6">
-                        Zona
-                      </TableHead>
-                      <TableHead className="font-semibold text-gray-700 py-3 px-6">
-                        Estado
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {data.headquarters.map((headquarter) => (
-                      <TableRow
-                        key={headquarter.codeDane}
-                        className="hover:bg-gray-50"
-                      >
-                        <TableCell className="py-3 px-6">
-                          {headquarter.codeDane}
-                        </TableCell>
-                        <TableCell className="py-3 px-6">
-                          {headquarter.name}
-                        </TableCell>
-                        <TableCell className="py-3 px-6">
-                          {headquarter.address}
-                        </TableCell>
-                        <TableCell className="py-3 px-6">
-                          {headquarter.zona}
-                        </TableCell>
-                        <TableCell className="py-3 px-6">
-                          {headquarter.state}
-                        </TableCell>
+              <div className="rounded-xl shadow-md border">
+                <div className="overflow-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-gray-100">
+                        <TableHead className="whitespace-nowrap font-semibold text-gray-700">
+                          Código DANE
+                        </TableHead>
+                        <TableHead className="whitespace-nowrap font-semibold text-gray-700">
+                          Nombre
+                        </TableHead>
+                        <TableHead className="whitespace-nowrap font-semibold text-gray-700">
+                          Dirección
+                        </TableHead>
+                        <TableHead className="whitespace-nowrap font-semibold text-gray-700">
+                          Zona
+                        </TableHead>
+                        <TableHead className="whitespace-nowrap font-semibold text-gray-700">
+                          Estado
+                        </TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {data.headquarters.map((headquarter) => (
+                        <TableRow
+                          key={headquarter.codeDane}
+                          className="hover:bg-gray-50"
+                        >
+                          <TableCell className="whitespace-nowrap">
+                            {headquarter.codeDane}
+                          </TableCell>
+                          <TableCell>
+                            {headquarter.name}
+                          </TableCell>
+                          <TableCell>
+                            {headquarter.address}
+                          </TableCell>
+                          <TableCell className="whitespace-nowrap">
+                            {headquarter.zona}
+                          </TableCell>
+                          <TableCell className="whitespace-nowrap">
+                            {headquarter.state}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               </div>
             </section>
           )}
