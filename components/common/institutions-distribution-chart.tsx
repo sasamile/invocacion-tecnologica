@@ -1,4 +1,3 @@
-// components/charts/institutions-distribution-chart.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -14,6 +13,7 @@ import {
   Legend,
   ChartOptions,
 } from "chart.js";
+import { useMunicipalities } from "@/hooks/use-municipalities";
 
 // Registrar los componentes necesarios de Chart.js
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -27,40 +27,41 @@ interface MunicipalityData {
 }
 
 export function InstitutionsDistributionChart() {
-  const [data, setData] = useState<MunicipalityData[]>([]);
-  const [loading, setLoading] = useState(true);
+  // const [data, setData] = useState<MunicipalityData[]>([]);
+  // const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { data: data, isLoading } = useMunicipalities();
 
   // Obtener datos de la API
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/api/meta/municipalities");
-        setData(response.data);
-        setLoading(false);
-      } catch (err) {
-        setError("Error al cargar los datos del gráfico");
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get("http://localhost:3000/api/meta/municipalities");
+  //       setData(response.data);
+  //       setLoading(false);
+  //     } catch (err) {
+  //       setError("Error al cargar los datos del gráfico");
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   // Filtrar municipios con totalInstituciones > 0, ordenar y limitar a los 10 principales
   const filteredData = data
-    .filter((municipality) => municipality.totalInstituciones > 0)
+    ?.filter((municipality) => municipality.totalInstituciones > 0)
     .sort((a, b) => b.totalInstituciones - a.totalInstituciones)
     .slice(0, 10); // Mostrar solo los 10 municipios con más instituciones
 
   // Preparar los datos para el gráfico
   const chartData = {
-    labels: filteredData.map((municipality) => municipality.name), // Nombres de los municipios
+    labels: filteredData?.map((municipality) => municipality.name), // Nombres de los municipios
     datasets: [
       {
         label: "Total de Instituciones",
-        data: filteredData.map((municipality) => municipality.totalInstituciones), // Número de instituciones
-        backgroundColor: filteredData.map((_, index) => {
+        data: filteredData?.map((municipality) => municipality.totalInstituciones), // Número de instituciones
+        backgroundColor: filteredData?.map((_, index) => {
           const colors = [
             "#7e42f5", // Púrpura
             "#a78bfa", // Púrpura más claro
@@ -71,7 +72,7 @@ export function InstitutionsDistributionChart() {
           ];
           return colors[index % colors.length];
         }),
-        borderColor: filteredData.map((_, index) => {
+        borderColor: filteredData?.map((_, index) => {
           const colors = [
             "#7e42f5",
             "#a78bfa",
@@ -105,7 +106,7 @@ export function InstitutionsDistributionChart() {
         cornerRadius: 6,
         callbacks: {
           label: (context) => `${context.dataset.label}: ${context.raw}`,
-          title: (context) => filteredData[context[0].dataIndex].name, // Mostrar el nombre completo en el tooltip
+          title: (context) => filteredData?.[context[0].dataIndex].name, // Mostrar el nombre completo en el tooltip
         },
       },
     },
@@ -173,7 +174,7 @@ export function InstitutionsDistributionChart() {
     },
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="h-[300px] flex items-center justify-center text-muted-foreground">
         <p className="text-lg">Cargando gráfico...</p>
